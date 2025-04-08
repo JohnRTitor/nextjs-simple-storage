@@ -1,5 +1,5 @@
 {
-  "name": "nextjs-ethers-fcc",
+  "name": "nextjs-basic-simple-storage",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.72.1",
     "next": "15.2.4",
-    "prettier": "^3.5.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "viem": "2.x",
+    "wagmi": "^2.14.16"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -22,6 +24,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
+    "prettier": "^3.5.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

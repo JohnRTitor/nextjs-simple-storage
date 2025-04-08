@@ -1,3 +1,3 @@
 export default function CommonHeader() {
-  return <div>Hi From Header!</div>;
+  return <div>Blockchain Connection Demo!</div>;
 }

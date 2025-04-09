@@ -5,6 +5,7 @@ import CommonHeader from "@/components/Header";
 import { useState, useEffect } from "react";
 import { useAccount, useConnect, useDisconnect, useBalance } from "wagmi";
 import { injected } from "@wagmi/connectors";
+import SimpleStorageSection from "@/components/SimpleStorageSection";
 
 export default function Home() {
   const [hasMetaMask, setHasMetaMask] = useState(false);
@@ -25,11 +26,8 @@ export default function Home() {
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       {/* Head metadata for the page */}
       <Head>
-        <title>Blockchain Connect Demo!</title>
-        <meta
-          name="description"
-          content="Demo for connecting to blockchain using Ethers.js, Next.js and Tailwind CSS."
-        />
+        <title>Simple Storage Contract Demo!</title>
+        <meta name="description" content="Demo for interacting with the SimpleStorage contract" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -79,22 +77,25 @@ function WalletSection({ hasMetaMask }: { hasMetaMask: boolean }) {
 
   // Case: Wallet is connected
   return (
-    <InfoCard>
-      <p>Connected to {address}</p>
-      <p className="text-gray-400 mb-4">
-        Balance:{" "}
-        <span className="font-semibold">
-          {balance?.formatted} {balance?.symbol}
-        </span>
-      </p>
-      <br />
-      <button
-        onClick={() => disconnect()}
-        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-      >
-        Disconnect Wallet
-      </button>
-    </InfoCard>
+    <>
+      <InfoCard>
+        <p>Connected to {address}</p>
+        <p className="text-gray-400 mb-4">
+          Balance:{" "}
+          <span className="font-semibold">
+            {balance?.formatted} {balance?.symbol || "Loading..."}
+          </span>
+        </p>
+        <br />
+        <button
+          onClick={() => disconnect()}
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+        >
+          Disconnect Wallet
+        </button>
+      </InfoCard>
+      <SimpleStorageSection />
+    </>
   );
 }
 

@@ -1,3 +1,3 @@
 export default function CommonHeader() {
-  return <div>Blockchain Connection Demo!</div>;
+  return <div>Simple Storage Contract Demo!</div>;
 }

@@ -24,6 +24,7 @@ if (!mainnetRpcUrl) {
 
 export const config = createConfig({
   chains: [mainnet, sepolia],
+  ssr: true, // https://wagmi.sh/react/guides/ssr#ssr
   transports: {
     [mainnet.id]: fallback([http(mainnetRpcUrl)]),
     [sepolia.id]: fallback([

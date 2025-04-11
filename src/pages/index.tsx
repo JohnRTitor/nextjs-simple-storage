@@ -10,14 +10,6 @@ export default function Home() {
   // Check if the user is connected to a wallet
   const { isConnected } = useAccount();
 
-  // Track if the component has mounted to avoid hydration issues
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    // Set mounted state to true once the component has mounted
-    setIsMounted(true);
-  }, []);
-
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       {/* Set page metadata */}
@@ -35,7 +27,7 @@ export default function Home() {
         <h2 className="text-2xl font-semibold">Welcome to the SimpleStorage DApp</h2>
 
         {/* Show message or main content depending on connection and mounting status */}
-        {!isMounted ? null : !isConnected ? (
+        {!isConnected ? (
           <p className="text-gray-500">Connect your wallet from the header to get started.</p>
         ) : (
           <SimpleStorageSection /> // Show DApp interaction section if wallet is connected

@@ -9,7 +9,7 @@ function SimpleStorageSection() {
   const [name, setName] = useState<string>("");
   const [nameNumber, setNameNumber] = useState<number>(0);
 
-  const { data: storedNumber, refetch } = useReadContract({
+  const { data: storedNumber } = useReadContract({
     address: simpleStorageAddress,
     abi: simpleStorageAbi,
     functionName: "retrieve",

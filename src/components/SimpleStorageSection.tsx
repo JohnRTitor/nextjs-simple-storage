@@ -1,6 +1,6 @@
 "use client";
 
-import { useReadContract, useWriteContract } from "wagmi";
+import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { simpleStorageAbi, simpleStorageAddress } from "@/constants";
 import { useState } from "react";
 
@@ -9,13 +9,18 @@ function SimpleStorageSection() {
   const [name, setName] = useState<string>("");
   const [nameNumber, setNameNumber] = useState<number>(0);
 
-  const { data: storedNumber } = useReadContract({
+  const { data: storedNumber, refetch } = useReadContract({
     address: simpleStorageAddress,
     abi: simpleStorageAbi,
     functionName: "retrieve",
   });
 
-  const { writeContract: writeStore } = useWriteContract();
+  const { data: hash, writeContract: writeStore, isPending } = useWriteContract();
+  // Transaction receipt hook
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
+    hash,
+  });
+
   const { writeContract: writeAddPerson } = useWriteContract();
 
   const handleStoreNumber = () => {
@@ -27,8 +32,12 @@ function SimpleStorageSection() {
     });
   };
 
-  const handleAddPerson = () => {
-    writeAddPerson({
+  if (isConfirmed) {
+    refetch();
+  }
+
+  const handleAddPerson = async () => {
+    await writeAddPerson({
       address: simpleStorageAddress,
       abi: simpleStorageAbi,
       functionName: "addPerson",
@@ -55,9 +64,10 @@ function SimpleStorageSection() {
         />
         <button
           onClick={handleStoreNumber}
+          disabled={isPending || isConfirming}
           className="bg-blue-600 hover:bg-blue-700 text-white w-full p-2 rounded"
         >
-          Store Favorite Number
+          {isPending ? "Confirming..." : "Store Favorite Number"}
         </button>
       </div>
 

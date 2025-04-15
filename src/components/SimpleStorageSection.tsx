@@ -9,7 +9,7 @@ function SimpleStorageSection() {
   const [name, setName] = useState<string>("");
   const [nameNumber, setNameNumber] = useState<number>(0);
 
-  const { data: storedNumber, refetch } = useReadContract({
+  const { data: storedFavoriteNumber, refetch: refetchFavoriteNumber } = useReadContract({
     address: simpleStorageAddress,
     abi: simpleStorageAbi,
     functionName: "retrieve",
@@ -33,7 +33,7 @@ function SimpleStorageSection() {
   };
 
   if (isConfirmed) {
-    refetch();
+    refetchFavoriteNumber();
   }
 
   const handleAddPerson = async () => {
@@ -51,7 +51,7 @@ function SimpleStorageSection() {
 
       <p className="text-center">
         Current Favorite Number:{" "}
-        <span className="font-semibold">{storedNumber?.toString() || "Loading..."}</span>
+        <span className="font-semibold">{storedFavoriteNumber?.toString() || "Loading..."}</span>
       </p>
 
       <div className="space-y-3">
@@ -65,9 +65,13 @@ function SimpleStorageSection() {
         <button
           onClick={handleStoreNumber}
           disabled={isPending || isConfirming}
-          className="bg-blue-600 hover:bg-blue-700 text-white w-full p-2 rounded"
+          className={`w-full p-2 rounded text-white ${
+            isPending || isConfirming
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
         >
-          {isPending ? "Confirming..." : "Store Favorite Number"}
+          {isPending ? "Submitting..." : isConfirming ? "Confirming..." : "Store Favorite Number"}
         </button>
       </div>
 

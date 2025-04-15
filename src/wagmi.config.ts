@@ -1,4 +1,4 @@
-import { createConfig, fallback, http } from "wagmi";
+import { createConfig, fallback, http, cookieStorage, createStorage } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
 
 declare module "wagmi" {
@@ -24,7 +24,10 @@ if (!mainnetRpcUrl) {
 
 export const config = createConfig({
   chains: [mainnet, sepolia],
-  ssr: true, // https://wagmi.sh/react/guides/ssr#ssr
+  ssr: true,
+  storage: createStorage({
+    storage: cookieStorage,
+  }),
   transports: {
     [mainnet.id]: fallback([http(mainnetRpcUrl)]),
     [sepolia.id]: fallback([

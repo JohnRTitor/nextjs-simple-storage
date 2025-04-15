@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAccount, useConnect, useDisconnect, useBalance } from "wagmi";
-import { injected } from "@wagmi/connectors"; // Injected web3 extension connector
+import { injected } from "wagmi/connectors"; // Injected web3 extension connector
 import { formatEther } from "viem"; // For formatting ETH balance
 
 export default function CommonHeader() {

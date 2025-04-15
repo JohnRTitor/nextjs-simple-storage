@@ -15,12 +15,8 @@
   # Enables node and javascript support!
   languages.javascript = {
     enable = true;
-    # Corepack is wrapper for package managers such as yarn and npm
-    # I use yarn here
-    # `yarn set version stable` to upgrade to the latest version (4x)
-    # NextJS Turbopack can't use yarn pnp, so use node-modules linker
-    # explicitly. `yarn config set nodeLinker node-modules`
-    corepack.enable = true;
+    # PNPM saves space and faster than Yarn classic and NPM!
+    pnpm.enable = true;
   };
 
   # https://devenv.sh/processes/

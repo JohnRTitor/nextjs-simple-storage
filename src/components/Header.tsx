@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAccount, useConnect, useDisconnect, useBalance } from "wagmi";
 import { injected } from "wagmi/connectors"; // Injected web3 extension connector
 import { formatEther } from "viem"; // For formatting ETH balance
+import { toast } from "sonner";
 
 export default function CommonHeader() {
   const [hasMetaMask, setHasMetaMask] = useState(false); // Tracks if MetaMask is installed
@@ -39,7 +40,16 @@ export default function CommonHeader() {
       ) : !isConnected ? (
         // Show connect button if wallet not connected
         <button
-          onClick={() => connect({ connector: injected() })}
+          onClick={() =>
+            connect(
+              { connector: injected() },
+              {
+                onSuccess: () => {
+                  toast("Wallet connected! Now you can interact with the DApp.");
+                },
+              },
+            )
+          }
           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full text-sm"
         >
           Connect Wallet
@@ -47,16 +57,33 @@ export default function CommonHeader() {
       ) : (
         // Show wallet address, balance, and disconnect button if connected
         <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-700 dark:text-gray-300 truncate max-w-[120px] rounded-full px-3 py-1 bg-gray-100 dark:bg-gray-800">
+          <span
+            title={address} // shows full address on hover like browser tooltip
+            onClick={() => {
+              navigator.clipboard.writeText(address || "");
+              toast("Address copied to clipboard!");
+            }}
+            className="cursor-pointer text-sm text-gray-700 dark:text-gray-300 truncate max-w-[120px] rounded-full px-3 py-1 bg-gray-100 dark:bg-gray-800"
+          >
             {address}
           </span>
+
           <span className="text-xs text-gray-400 dark:text-gray-500">
             {/* Display ETH balance formatted to 6 decimal places */}
             {balance?.value ? parseFloat(formatEther(balance.value)).toFixed(6) : "0.000000"}{" "}
             {balance?.symbol}
           </span>
           <button
-            onClick={() => disconnect()}
+            onClick={() => {
+              disconnect(
+                {},
+                {
+                  onSettled: () => {
+                    toast("Disconnected, see you later!");
+                  },
+                },
+              );
+            }}
             className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
           >
             Disconnect

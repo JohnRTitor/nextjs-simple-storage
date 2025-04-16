@@ -2,7 +2,8 @@
 
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { simpleStorageAbi, simpleStorageAddress } from "@/constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type FavoriteNumber = bigint;
 type PersonName = string;
@@ -53,9 +54,12 @@ function SimpleStorageSection() {
     });
   };
 
-  if (isConfirmed) {
-    refetchFavoriteNumber();
-  }
+  useEffect(() => {
+    if (isConfirmed) {
+      toast.success("Favorite number stored!");
+      refetchFavoriteNumber();
+    }
+  }, [isConfirmed, refetchFavoriteNumber]);
 
   const handleAddPerson = async () => {
     await writeAddPerson({

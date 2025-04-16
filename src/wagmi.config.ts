@@ -1,5 +1,6 @@
 import { createConfig, fallback, http, cookieStorage, createStorage } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
+import { env } from "@/lib/env";
 
 declare module "wagmi" {
   interface Register {
@@ -13,14 +14,8 @@ declare module "wagmi" {
 /// @dev: On Next, these environment variables have to be named
 /// @ with the prefix NEXT_PUBLIC_, else they will not be available in the browser
 /// and only be available in the server-side environment
-const sepoliaRpcUrl = process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL;
-const mainnetRpcUrl = process.env.NEXT_PUBLIC_MAINNET_RPC_URL;
-if (!sepoliaRpcUrl) {
-  console.error("Missing NEXT_PUBLIC_SEPOLIA_RPC_URL in environment variables.");
-}
-if (!mainnetRpcUrl) {
-  console.error("Missing NEXT_PUBLIC_MAINNET_RPC_URL in environment variables.");
-}
+const sepoliaRpcUrl = env.NEXT_PUBLIC_SEPOLIA_RPC_URL;
+const mainnetRpcUrl = env.NEXT_PUBLIC_MAINNET_RPC_URL;
 
 export const config = createConfig({
   chains: [mainnet, sepolia],

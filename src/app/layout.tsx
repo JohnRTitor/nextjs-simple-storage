@@ -5,7 +5,6 @@ import { Providers } from "./providers";
 import { headers } from "next/headers";
 import { cookieToInitialState } from "wagmi";
 import { config } from "@/wagmi.config";
-import CommonHeader from "@/components/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,11 +30,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Providers initialState={initialState}>
-          {/* Header with wallet connect/disconnect button */}
-          <CommonHeader />
-          {children}
-        </Providers>
+        <Providers initialState={initialState}>{children}</Providers>
       </body>
     </html>
   );

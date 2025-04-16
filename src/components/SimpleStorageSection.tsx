@@ -13,7 +13,6 @@ function SimpleStorageSection() {
   const [newFavNumber, setNewFavNumber] = useState<number>(0);
   const [name, setName] = useState<string>("");
   const [nameNumber, setNameNumber] = useState<number>(0);
-
   const [queryName, setQueryName] = useState<string>("");
   const [queryIndex, setQueryIndex] = useState<number>(0);
 
@@ -68,90 +67,101 @@ function SimpleStorageSection() {
   };
 
   return (
-    <div className="space-y-6 border p-4 rounded-md w-full max-w-lg">
-      <h2 className="text-xl font-bold text-center">📦 SimpleStorage Contract</h2>
+    <div className="space-y-6 p-4 w-full max-w-5xl mx-auto">
+      <h2 className="text-2xl font-bold text-center">📦 SimpleStorage Contract </h2>
 
-      <p className="text-center">
-        Current Favorite Number:{" "}
-        <span className="font-semibold">{storedFavoriteNumber?.toString() || "Loading..."}</span>
-      </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Store Favorite Number */}
+        <div className="bg-white dark:bg-gray-900 dark:border-gray-700 border border-gray-200 shadow rounded-xl p-4 space-y-3">
+          <h3 className="font-semibold text-lg">Store Favorite Number</h3>
+          <input
+            type="number"
+            placeholder="Enter new favorite number"
+            value={newFavNumber}
+            onChange={(e) => setNewFavNumber(Number(e.target.value))}
+            className="w-full border p-2 rounded bg-white dark:bg-gray-800 dark:border-gray-600"
+          />
+          <button
+            onClick={handleStoreNumber}
+            disabled={isPending || isConfirming}
+            className={`w-full p-2 rounded text-white ${
+              isPending || isConfirming
+                ? "bg-gray-400 dark:bg-gray-700 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
+          >
+            {isPending
+              ? "Submitting..."
+              : isConfirming
+                ? "Confirming..."
+                : "Store Favorite Number"}
+          </button>
+          <p className="text-sm text-center">
+            Current:{" "}
+            <span className="font-semibold">
+              {storedFavoriteNumber?.toString() || "Loading..."}
+            </span>
+          </p>
+        </div>
 
-      {/* Store a new favorite number */}
-      <div className="space-y-3">
-        <input
-          type="number"
-          placeholder="Enter new favorite number"
-          value={newFavNumber}
-          onChange={(e) => setNewFavNumber(Number(e.target.value))}
-          className="w-full border p-2 rounded"
-        />
-        <button
-          onClick={handleStoreNumber}
-          disabled={isPending || isConfirming}
-          className={`w-full p-2 rounded text-white ${
-            isPending || isConfirming
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700"
-          }`}
-        >
-          {isPending ? "Submitting..." : isConfirming ? "Confirming..." : "Store Favorite Number"}
-        </button>
-      </div>
+        {/* Add Person */}
+        <div className="bg-white dark:bg-gray-900 dark:border-gray-700 border border-gray-200 shadow rounded-xl p-4 space-y-3">
+          <h3 className="font-semibold text-lg">Add a Person</h3>
+          <input
+            type="text"
+            placeholder="Person's name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full border p-2 rounded bg-white dark:bg-gray-800 dark:border-gray-600"
+          />
+          <input
+            type="number"
+            placeholder="Their favorite number"
+            value={nameNumber}
+            onChange={(e) => setNameNumber(Number(e.target.value))}
+            className="w-full border p-2 rounded bg-white dark:bg-gray-800 dark:border-gray-600"
+          />
+          <button
+            onClick={handleAddPerson}
+            className="bg-green-600 hover:bg-green-700 text-white w-full p-2 rounded"
+          >
+            Add Person
+          </button>
+        </div>
 
-      {/* Add a person */}
-      <div className="space-y-3">
-        <input
-          type="text"
-          placeholder="Person's name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full border p-2 rounded"
-        />
-        <input
-          type="number"
-          placeholder="Their favorite number"
-          value={nameNumber}
-          onChange={(e) => setNameNumber(Number(e.target.value))}
-          className="w-full border p-2 rounded"
-        />
-        <button
-          onClick={handleAddPerson}
-          className="bg-green-600 hover:bg-green-700 text-white w-full p-2 rounded"
-        >
-          Add Person
-        </button>
-      </div>
+        {/* Query by Name */}
+        <div className="bg-white dark:bg-gray-900 dark:border-gray-700 border border-gray-200 shadow rounded-xl p-4 space-y-3">
+          <h3 className="font-semibold text-lg">Query by Name</h3>
+          <input
+            type="text"
+            placeholder="Enter name to look up"
+            value={queryName}
+            onChange={(e) => setQueryName(e.target.value)}
+            className="w-full border p-2 rounded bg-white dark:bg-gray-800 dark:border-gray-600"
+          />
+          <p className="text-center">
+            Favorite Number for <span className="font-semibold">{queryName || "___"}</span>:{" "}
+            <span className="font-semibold">{nameToFavNumber?.toString() ?? "—"}</span>
+          </p>
+        </div>
 
-      {/* Query nameToFavoriteNumber */}
-      <div className="space-y-3">
-        <input
-          type="text"
-          placeholder="Enter name to look up"
-          value={queryName}
-          onChange={(e) => setQueryName(e.target.value)}
-          className="w-full border p-2 rounded"
-        />
-        <p className="text-center">
-          Favorite Number for {queryName || "___"}:{" "}
-          <span className="font-semibold">{nameToFavNumber?.toString() ?? "—"}</span>
-        </p>
-      </div>
-
-      {/* Query people array */}
-      <div className="space-y-3">
-        <input
-          type="number"
-          placeholder="Enter index to fetch"
-          value={queryIndex}
-          onChange={(e) => setQueryIndex(Number(e.target.value))}
-          className="w-full border p-2 rounded"
-        />
-        <p className="text-center">
-          Person at index {queryIndex}:{" "}
-          <span className="font-semibold">
-            {personAtIndex ? `${personAtIndex[1]} (Fav #: ${personAtIndex[0]})` : "—"}
-          </span>
-        </p>
+        {/* Query by Index */}
+        <div className="bg-white dark:bg-gray-900 dark:border-gray-700 border border-gray-200 shadow rounded-xl p-4 space-y-3">
+          <h3 className="font-semibold text-lg">Query by Index</h3>
+          <input
+            type="number"
+            placeholder="Enter index to fetch"
+            value={queryIndex}
+            onChange={(e) => setQueryIndex(Number(e.target.value))}
+            className="w-full border p-2 rounded bg-white dark:bg-gray-800 dark:border-gray-600"
+          />
+          <p className="text-center">
+            Person at index {queryIndex}:{" "}
+            <span className="font-semibold">
+              {personAtIndex ? `${personAtIndex[1]} (Fav #: ${personAtIndex[0]})` : "—"}
+            </span>
+          </p>
+        </div>
       </div>
     </div>
   );

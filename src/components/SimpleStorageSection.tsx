@@ -68,12 +68,12 @@ function SimpleStorageSection() {
 
   return (
     <div className="space-y-6 p-4 w-full max-w-5xl mx-auto">
-      <h2 className="text-2xl font-bold text-center">📦 SimpleStorage Contract </h2>
+      <h4 className="text-2xl font-bold text-center"> Interact with the contract below! </h4>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Store Favorite Number */}
         <div className="bg-white dark:bg-gray-900 dark:border-gray-700 border border-gray-200 shadow rounded-xl p-4 space-y-3">
-          <h3 className="font-semibold text-lg">Store Favorite Number</h3>
+          <h3 className="font-semibold text-lg">Store Global Favorite Number</h3>
           <input
             type="number"
             placeholder="Enter new favorite number"
@@ -90,11 +90,7 @@ function SimpleStorageSection() {
                 : "bg-blue-600 hover:bg-blue-700"
             }`}
           >
-            {isPending
-              ? "Submitting..."
-              : isConfirming
-                ? "Confirming..."
-                : "Store Favorite Number"}
+            {isPending ? "Submitting..." : isConfirming ? "Confirming..." : "Store It!"}
           </button>
           <p className="text-sm text-center">
             Current:{" "}

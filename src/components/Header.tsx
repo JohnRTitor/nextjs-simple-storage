@@ -30,7 +30,7 @@ export default function CommonHeader() {
   return (
     <header className="w-full flex justify-between items-center p-4 border-b sticky top-0 bg-white dark:bg-gray-900 dark:text-white z-10 rounded-lg">
       {/* DApp title */}
-      <h1 className="text-xl font-bold">Smart Contract Lottery</h1>
+      <h1 className="text-xl font-bold">📦 SimpleStorage DApp</h1>
 
       {/* Conditional rendering based on MetaMask and connection status */}
       {!hasMetaMask ? (

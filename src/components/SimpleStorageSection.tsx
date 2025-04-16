@@ -4,10 +4,18 @@ import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 
 import { simpleStorageAbi, simpleStorageAddress } from "@/constants";
 import { useState } from "react";
 
+type FavoriteNumber = bigint;
+type PersonName = string;
+
+type PersonTuple = [FavoriteNumber, PersonName];
+
 function SimpleStorageSection() {
   const [newFavNumber, setNewFavNumber] = useState<number>(0);
   const [name, setName] = useState<string>("");
   const [nameNumber, setNameNumber] = useState<number>(0);
+
+  const [queryName, setQueryName] = useState<string>("");
+  const [queryIndex, setQueryIndex] = useState<number>(0);
 
   const { data: storedFavoriteNumber, refetch: refetchFavoriteNumber } = useReadContract({
     address: simpleStorageAddress,
@@ -15,8 +23,22 @@ function SimpleStorageSection() {
     functionName: "retrieve",
   });
 
+  const { data: nameToFavNumber } = useReadContract({
+    address: simpleStorageAddress,
+    abi: simpleStorageAbi,
+    functionName: "nameToFavoriteNumber",
+    args: [queryName],
+  });
+
+  const { data: personAtIndex } = useReadContract({
+    address: simpleStorageAddress,
+    abi: simpleStorageAbi,
+    functionName: "people",
+    args: [BigInt(queryIndex)],
+  }) as { data: PersonTuple | undefined };
+
   const { data: hash, writeContract: writeStore, isPending } = useWriteContract();
-  // Transaction receipt hook
+
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
     hash,
   });
@@ -54,6 +76,7 @@ function SimpleStorageSection() {
         <span className="font-semibold">{storedFavoriteNumber?.toString() || "Loading..."}</span>
       </p>
 
+      {/* Store a new favorite number */}
       <div className="space-y-3">
         <input
           type="number"
@@ -75,6 +98,7 @@ function SimpleStorageSection() {
         </button>
       </div>
 
+      {/* Add a person */}
       <div className="space-y-3">
         <input
           type="text"
@@ -96,6 +120,38 @@ function SimpleStorageSection() {
         >
           Add Person
         </button>
+      </div>
+
+      {/* Query nameToFavoriteNumber */}
+      <div className="space-y-3">
+        <input
+          type="text"
+          placeholder="Enter name to look up"
+          value={queryName}
+          onChange={(e) => setQueryName(e.target.value)}
+          className="w-full border p-2 rounded"
+        />
+        <p className="text-center">
+          Favorite Number for {queryName || "___"}:{" "}
+          <span className="font-semibold">{nameToFavNumber?.toString() ?? "—"}</span>
+        </p>
+      </div>
+
+      {/* Query people array */}
+      <div className="space-y-3">
+        <input
+          type="number"
+          placeholder="Enter index to fetch"
+          value={queryIndex}
+          onChange={(e) => setQueryIndex(Number(e.target.value))}
+          className="w-full border p-2 rounded"
+        />
+        <p className="text-center">
+          Person at index {queryIndex}:{" "}
+          <span className="font-semibold">
+            {personAtIndex ? `${personAtIndex[1]} (Fav #: ${personAtIndex[0]})` : "—"}
+          </span>
+        </p>
       </div>
     </div>
   );

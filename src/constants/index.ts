@@ -1,4 +1,4 @@
-export const simpleStorageAddress = "0x611df8352f6Fa530a3dcAA031c2e151E88A0Edbc";
+export const simpleStorageAddress = "0x37Ccf59439ac114E1c44D1b3f82869d917301490";
 
 export const simpleStorageAbi = [
   {
@@ -17,6 +17,19 @@ export const simpleStorageAbi = [
     name: "addPerson",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "globalFavoriteNumber",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -46,7 +59,7 @@ export const simpleStorageAbi = [
         type: "uint256",
       },
     ],
-    name: "people",
+    name: "personList",
     outputs: [
       {
         internalType: "uint256",
@@ -64,7 +77,7 @@ export const simpleStorageAbi = [
   },
   {
     inputs: [],
-    name: "retrieve",
+    name: "retrieveGlobalFavoriteNumber",
     outputs: [
       {
         internalType: "uint256",
@@ -83,7 +96,7 @@ export const simpleStorageAbi = [
         type: "uint256",
       },
     ],
-    name: "store",
+    name: "storeGlobalFavoriteNumber",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

@@ -1,14 +1,11 @@
 "use client";
 
-import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { useReadContract } from "wagmi";
 import { simpleStorageAbi, simpleStorageAddress } from "@/constants";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-
-type FavoriteNumber = bigint;
-type PersonName = string;
-
-type PersonTuple = [FavoriteNumber, PersonName];
+import { useAddPerson, useStoreGlobalFavoriteNumber } from "@/hooks/core";
+import type { PersonTuple } from "@/types/core";
 
 function SimpleStorageSection() {
   const [newFavNumber, setNewFavNumber] = useState<number>(0);
@@ -20,7 +17,7 @@ function SimpleStorageSection() {
   const { data: storedFavoriteNumber, refetch: refetchFavoriteNumber } = useReadContract({
     address: simpleStorageAddress,
     abi: simpleStorageAbi,
-    functionName: "retrieve",
+    functionName: "retrieveGlobalFavoriteNumber",
   });
 
   const { data: nameToFavNumber } = useReadContract({
@@ -33,42 +30,42 @@ function SimpleStorageSection() {
   const { data: personAtIndex } = useReadContract({
     address: simpleStorageAddress,
     abi: simpleStorageAbi,
-    functionName: "people",
+    functionName: "personList",
     args: [BigInt(queryIndex)],
   }) as { data: PersonTuple | undefined };
 
-  const { data: hash, writeContract: writeStore, isPending } = useWriteContract();
+  const {
+    storeNumber,
+    isPending: isStorePending,
+    isConfirming: isStoreConfirming,
+    isConfirmed: isStoreConfirmed,
+  } = useStoreGlobalFavoriteNumber();
+  const handleStoreNumber = async () => {
+    await storeNumber({ favoriteNumber: newFavNumber });
+  };
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
-    hash,
-  });
-
-  const { writeContract: writeAddPerson } = useWriteContract();
-
-  const handleStoreNumber = () => {
-    writeStore({
-      address: simpleStorageAddress,
-      abi: simpleStorageAbi,
-      functionName: "store",
-      args: [BigInt(newFavNumber)],
-    });
+  const {
+    addPerson,
+    isPending: isAddPersonPending,
+    isConfirming: isAddPersonConfirming,
+    isConfirmed: isAddPersonConfirmed,
+  } = useAddPerson();
+  const handleAddPerson = async () => {
+    await addPerson({ name, favoriteNumber: nameNumber });
   };
 
   useEffect(() => {
-    if (isConfirmed) {
+    if (isStoreConfirmed) {
       toast.success("Favorite number stored!");
       refetchFavoriteNumber();
     }
-  }, [isConfirmed, refetchFavoriteNumber]);
+  }, [isStoreConfirmed, refetchFavoriteNumber]);
 
-  const handleAddPerson = async () => {
-    await writeAddPerson({
-      address: simpleStorageAddress,
-      abi: simpleStorageAbi,
-      functionName: "addPerson",
-      args: [name, BigInt(nameNumber)],
-    });
-  };
+  useEffect(() => {
+    if (isAddPersonConfirmed) {
+      toast.success("Person added successfully!");
+    }
+  }, [isAddPersonConfirmed]);
 
   return (
     <div className="space-y-6 p-4 w-full max-w-5xl mx-auto">
@@ -87,14 +84,14 @@ function SimpleStorageSection() {
           />
           <button
             onClick={handleStoreNumber}
-            disabled={isPending || isConfirming}
+            disabled={isStorePending || isStoreConfirming}
             className={`w-full p-2 rounded text-white ${
-              isPending || isConfirming
+              isStorePending || isStoreConfirming
                 ? "bg-gray-400 dark:bg-gray-700 cursor-not-allowed"
                 : "bg-blue-600 hover:bg-blue-700"
             }`}
           >
-            {isPending ? "Submitting..." : isConfirming ? "Confirming..." : "Store It!"}
+            {isStorePending ? "Submitting..." : isStoreConfirming ? "Confirming..." : "Store It!"}
           </button>
           <p className="text-sm text-center">
             Current:{" "}
@@ -123,9 +120,18 @@ function SimpleStorageSection() {
           />
           <button
             onClick={handleAddPerson}
-            className="bg-green-600 hover:bg-green-700 text-white w-full p-2 rounded"
+            disabled={isAddPersonPending || isAddPersonConfirming}
+            className={`w-full p-2 rounded text-white ${
+              isAddPersonPending || isAddPersonConfirming
+                ? "bg-gray-400 dark:bg-gray-700 cursor-not-allowed"
+                : "bg-green-600 hover:bg-green-700"
+            }`}
           >
-            Add Person
+            {isAddPersonPending
+              ? "Submitting..."
+              : isAddPersonConfirming
+                ? "Confirming..."
+                : "Add Person"}
           </button>
         </div>
 

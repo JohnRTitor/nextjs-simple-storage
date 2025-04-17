@@ -61,7 +61,7 @@ export default function CommonHeader() {
             title={address} // shows full address on hover like browser tooltip
             onClick={() => {
               navigator.clipboard.writeText(address || "");
-              toast.info("Address copied to clipboard!");
+              toast.success("Address copied to clipboard!");
             }}
             className="cursor-pointer text-sm text-gray-700 dark:text-gray-300 truncate max-w-[120px] rounded-full px-3 py-1 bg-gray-100 dark:bg-gray-800"
           >

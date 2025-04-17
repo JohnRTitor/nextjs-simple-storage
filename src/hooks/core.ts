@@ -15,28 +15,30 @@ export function useSimpleStorageFunction(functionName: string) {
 
   const execute = async (args: ContractFunctionArgs) => {
     console.log("Contract Function:", functionName, args);
-    try {
-      toast.info("Notification", {
-        description: "Please confirm the transaction in your wallet.",
-      });
+    const txHash = await toast
+      .promise(
+        writeContractAsync({
+          functionName,
+          abi: simpleStorageAbi,
+          address: simpleStorageAddress,
+          args,
+        }),
+        {
+          loading: "Waiting for wallet confirmation...",
+          success: (data) => {
+            setHash(data);
+            return "Transaction sent!";
+          },
+          error: (err: BaseError) => {
+            console.warn("Write Error:", err);
+            return err.shortMessage || "Transaction failed.";
+          },
+        },
+      )
+      .unwrap();
 
-      const txHash = await writeContractAsync({
-        functionName,
-        abi: simpleStorageAbi,
-        address: simpleStorageAddress,
-        args,
-      });
-
-      setHash(txHash);
-      return { hash: txHash };
-    } catch (err) {
-      const error = err as BaseError;
-      toast.error("Error", {
-        description: error.shortMessage,
-      });
-      console.warn("Write Error:", error);
-      return { error: error.message };
-    }
+    setHash(txHash);
+    return { hash: txHash };
   };
 
   return {

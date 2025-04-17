@@ -45,7 +45,7 @@ export default function CommonHeader() {
               { connector: injected() },
               {
                 onSuccess: () => {
-                  toast("Wallet connected! Now you can interact with the DApp.");
+                  toast.info("Wallet connected! Now you can interact with the DApp.");
                 },
               },
             )
@@ -61,7 +61,7 @@ export default function CommonHeader() {
             title={address} // shows full address on hover like browser tooltip
             onClick={() => {
               navigator.clipboard.writeText(address || "");
-              toast("Address copied to clipboard!");
+              toast.info("Address copied to clipboard!");
             }}
             className="cursor-pointer text-sm text-gray-700 dark:text-gray-300 truncate max-w-[120px] rounded-full px-3 py-1 bg-gray-100 dark:bg-gray-800"
           >
@@ -79,7 +79,7 @@ export default function CommonHeader() {
                 {},
                 {
                   onSettled: () => {
-                    toast("Disconnected, see you later!");
+                    toast.warning("Disconnected, see you later!");
                   },
                 },
               );

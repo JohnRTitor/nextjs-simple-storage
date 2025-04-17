@@ -3,6 +3,7 @@ import { AddPersonParams, StoreGlobalFavoriteNumberParams } from "@/types/core";
 import { toast } from "sonner";
 import { BaseError, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { useState } from "react";
+import { ContractFunctionArgs } from "viem";
 
 export function useSimpleStorageFunction(functionName: string) {
   const { writeContractAsync, isPending } = useWriteContract();
@@ -12,10 +13,10 @@ export function useSimpleStorageFunction(functionName: string) {
     hash,
   });
 
-  const execute = async (args: any[]) => {
+  const execute = async (args: ContractFunctionArgs) => {
     console.log("Contract Function:", functionName, args);
     try {
-      toast("Notification", {
+      toast.info("Notification", {
         description: "Please confirm the transaction in your wallet.",
       });
 
@@ -31,9 +32,9 @@ export function useSimpleStorageFunction(functionName: string) {
     } catch (err) {
       const error = err as BaseError;
       toast.error("Error", {
-        description: error.message,
+        description: error.shortMessage,
       });
-      console.error("Write Error:", error);
+      console.warn("Write Error:", error);
       return { error: error.message };
     }
   };

@@ -1,11 +1,11 @@
 "use client";
 
 import { useAccount, useSwitchChain } from "wagmi";
-import SimpleStorageSection from "@/components/SimpleStorageSection";
-import CommonHeader from "./Header";
+import SimpleStorageSection from "@/components/Home/SimpleStorageSection";
+import CommonHeader from "@/components/Header";
 import { toast } from "sonner";
 
-export default function HomeClientSection() {
+export default function HomeClientMain() {
   const { isConnected, chain } = useAccount();
   const { switchChain } = useSwitchChain();
 

@@ -1,4 +1,4 @@
-import HomeClientSection from "@/components/HomeClientSection";
+import HomeClientMain from "@/components/Home/HomeClientMain";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <HomeClientSection />;
+  return <HomeClientMain />;
 }

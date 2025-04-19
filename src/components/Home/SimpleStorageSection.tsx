@@ -5,6 +5,7 @@ import { simpleStorageAbi, simpleStorageAddress } from "@/constants";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useAddPerson, useStoreGlobalFavoriteNumber } from "@/hooks/core";
+import ContractFunctionCard from "@/components/ui/ContractFunctionCard";
 import type { PersonTuple } from "@/types/core";
 
 function SimpleStorageSection() {
@@ -73,8 +74,7 @@ function SimpleStorageSection() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Store Favorite Number */}
-        <div className="bg-white dark:bg-gray-900 dark:border-gray-700 border border-gray-200 shadow rounded-xl p-4 space-y-3">
-          <h3 className="font-semibold text-lg">Store Global Favorite Number</h3>
+        <ContractFunctionCard title="Store Global Favorite Number">
           <input
             type="number"
             placeholder="Enter new favorite number"
@@ -99,11 +99,10 @@ function SimpleStorageSection() {
               {storedFavoriteNumber?.toString() || "Loading..."}
             </span>
           </p>
-        </div>
+        </ContractFunctionCard>
 
         {/* Add Person */}
-        <div className="bg-white dark:bg-gray-900 dark:border-gray-700 border border-gray-200 shadow rounded-xl p-4 space-y-3">
-          <h3 className="font-semibold text-lg">Add a Person</h3>
+        <ContractFunctionCard title="Add a Person">
           <input
             type="text"
             placeholder="Person's name"
@@ -133,11 +132,10 @@ function SimpleStorageSection() {
                 ? "Confirming..."
                 : "Add Person"}
           </button>
-        </div>
+        </ContractFunctionCard>
 
         {/* Query by Name */}
-        <div className="bg-white dark:bg-gray-900 dark:border-gray-700 border border-gray-200 shadow rounded-xl p-4 space-y-3">
-          <h3 className="font-semibold text-lg">Query by Name</h3>
+        <ContractFunctionCard title="Query by Name">
           <input
             type="text"
             placeholder="Enter name to look up"
@@ -149,11 +147,10 @@ function SimpleStorageSection() {
             Favorite Number for <span className="font-semibold">{queryName || "___"}</span>:{" "}
             <span className="font-semibold">{nameToFavNumber?.toString() ?? "—"}</span>
           </p>
-        </div>
+        </ContractFunctionCard>
 
         {/* Query by Index */}
-        <div className="bg-white dark:bg-gray-900 dark:border-gray-700 border border-gray-200 shadow rounded-xl p-4 space-y-3">
-          <h3 className="font-semibold text-lg">Query by Index</h3>
+        <ContractFunctionCard title="Query by Index">
           <input
             type="number"
             placeholder="Enter index to fetch"
@@ -167,7 +164,7 @@ function SimpleStorageSection() {
               {personAtIndex ? `${personAtIndex[1]} (Fav #: ${personAtIndex[0]})` : "—"}
             </span>
           </p>
-        </div>
+        </ContractFunctionCard>
       </div>
     </div>
   );

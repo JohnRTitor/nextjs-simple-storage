@@ -1,16 +1,16 @@
 "use client";
 
-import { useAccount, useSwitchChain } from "wagmi";
+import { BaseError, useAccount, useSwitchChain } from "wagmi";
 import SimpleStorageSection from "@/components/Home/SimpleStorageSection";
 import CommonHeader from "@/components/Header";
 import { toast } from "sonner";
+import { sepolia } from "viem/chains";
 
 export default function HomeClientMain() {
   const { isConnected, chain } = useAccount();
-  const { switchChain } = useSwitchChain();
+  const { switchChainAsync } = useSwitchChain();
 
-  const sepoliaChainId = 11155111;
-  const isOnSepolia = chain?.id === sepoliaChainId; // Sepolia chain ID
+  const isOnSepolia = sepolia.id === chain?.id; // Sepolia chain ID
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -23,23 +23,26 @@ export default function HomeClientMain() {
               Connect your wallet on the Sepolia testnet from the header to get started.
             </p>
           </>
-        ) : !isOnSepolia && switchChain ? (
+        ) : !isOnSepolia ? (
           <>
             <h2 className="text-2xl font-semibold">Wrong Network</h2>
             <p className="text-gray-500">Please switch to the Sepolia test network.</p>
             {
               <button
                 onClick={() =>
-                  switchChain(
-                    { chainId: sepoliaChainId },
+                  toast.promise(
+                    switchChainAsync({
+                      chainId: sepolia.id,
+                    }),
                     {
-                      onSuccess: () => {
+                      loading: "Waiting for wallet confirmation...",
+                      success: () => {
                         console.log("Switched to Sepolia");
-                        toast.success("Successfully switched to Sepolia Network");
+                        return "Successfully switched to Sepolia Network";
                       },
-                      onError: (error) => {
-                        console.warn("Failed to switch to Sepolia", error);
-                        toast.error("Failed to switch to Sepolia Network");
+                      error: (err: BaseError) => {
+                        console.warn("Failed to switch to Sepolia", err);
+                        return err.shortMessage || "Failed to switch to Sepolia Network";
                       },
                     },
                   )

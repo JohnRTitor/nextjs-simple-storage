@@ -1,7 +1,7 @@
 "use client"; // Ensure this component runs on the client side
 
 import { useEffect, useState } from "react";
-import { useAccount, useConnect, useDisconnect, useBalance } from "wagmi";
+import { useAccount, useConnect, useDisconnect, useBalance, BaseError } from "wagmi";
 import { injected } from "wagmi/connectors"; // Injected web3 extension connector
 import { formatEther } from "viem"; // For formatting ETH balance
 import { toast } from "sonner";
@@ -10,7 +10,7 @@ export default function CommonHeader() {
   const [hasMetaMask, setHasMetaMask] = useState(false); // Tracks if MetaMask is installed
 
   // Hook to initiate wallet connection
-  const { connect } = useConnect();
+  const { connectAsync } = useConnect();
 
   // Hook to get wallet address and connection status
   const { address, isConnected } = useAccount();
@@ -41,14 +41,17 @@ export default function CommonHeader() {
         // Show connect button if wallet not connected
         <button
           onClick={() =>
-            connect(
-              { connector: injected() },
-              {
-                onSuccess: () => {
-                  toast.info("Wallet connected! Now you can interact with the DApp.");
-                },
+            toast.promise(connectAsync({ connector: injected() }), {
+              loading: "Waiting for wallet confirmation...",
+              success: () => {
+                console.log("Connected");
+                return "Wallet connected! Now you can interact with the DApp.";
               },
-            )
+              error: (err: BaseError) => {
+                console.warn("Failed to connect: ", err);
+                return err.shortMessage || "Failed to connect to wallet";
+              },
+            })
           }
           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full text-sm"
         >
